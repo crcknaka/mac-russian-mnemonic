@@ -11,6 +11,8 @@ input source. No background apps, no hacks.
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 · macOS · works on macOS 26 (Tahoe)
 
+![Russian – Mnemonic key map](docs/keyboard.svg)
+
 ---
 
 ## Features

@@ -21,6 +21,15 @@ rm -rf "$BUNDLE"
 mkdir -p "$BUNDLE/Contents/Resources/en.lproj"
 cp "$LAYOUT" "$BUNDLE/Contents/Resources/"
 
+# Menu-bar icon: an .icns named exactly like the layout is picked up by macOS.
+ICON="${LAYOUT_NAME}.icns"
+if [ -f "$ICON" ]; then
+  cp "$ICON" "$BUNDLE/Contents/Resources/"
+  echo "Included icon: $ICON"
+else
+  echo "No $ICON found — bundle will use the default text badge."
+fi
+
 cat > "$BUNDLE/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
