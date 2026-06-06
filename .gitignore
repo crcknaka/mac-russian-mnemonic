@@ -14,5 +14,5 @@ Icon?
 __pycache__/
 *.pyc
 
-# Claude Code local settings
+# Local tool/editor settings
 .claude/
