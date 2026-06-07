@@ -1,5 +1,5 @@
 // Generate an .iconset (PNGs at all required sizes) for the layout icon.
-// Draws a white "Я" on a blue rounded-square. Usage: swift make_icon.swift <iconset-dir>
+// Draws a white "RU" on a blue rounded-square. Usage: swift make_icon.swift <iconset-dir>
 import AppKit
 
 let args = CommandLine.arguments
@@ -29,9 +29,9 @@ func makeIcon(pixels: Int, to path: String) {
     ])!
     grad.draw(in: bg, angle: -90)
 
-    // Centered white "Я".
-    let letter = "Я" as NSString
-    let font = NSFont.systemFont(ofSize: s * 0.60, weight: .bold)
+    // Centered white "RU".
+    let letter = "RU" as NSString
+    let font = NSFont.systemFont(ofSize: s * 0.42, weight: .bold)
     let para = NSMutableParagraphStyle(); para.alignment = .center
     let attrs: [NSAttributedString.Key: Any] = [
         .font: font, .foregroundColor: NSColor.white, .paragraphStyle: para,
