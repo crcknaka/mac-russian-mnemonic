@@ -1,5 +1,6 @@
 // Generate an .iconset (PNGs at all required sizes) for the layout icon.
-// Draws a white "ru" on a blue rounded-square. Usage: swift make_icon.swift <iconset-dir>
+// Draws a white "RU" on a gray rounded-square, matching the native macOS
+// input-source badge. Usage: swift make_icon.swift <iconset-dir>
 import AppKit
 
 let args = CommandLine.arguments
@@ -18,20 +19,18 @@ func makeIcon(pixels: Int, to path: String) {
     let ctx = NSGraphicsContext(bitmapImageRep: rep)!
     NSGraphicsContext.current = ctx
 
-    // Rounded-square background with a vertical blue gradient.
+    // Rounded-square background matching the original macOS input-source
+    // badge color. The badge fills the canvas like the system icons.
     let inset = s * 0.045
     let rect = CGRect(x: inset, y: inset, width: s - 2*inset, height: s - 2*inset)
-    let radius = s * 0.185
+    let radius = s * 0.16
     let bg = NSBezierPath(roundedRect: rect, xRadius: radius, yRadius: radius)
-    let grad = NSGradient(colors: [
-        NSColor(srgbRed: 0.33, green: 0.58, blue: 0.98, alpha: 1.0),
-        NSColor(srgbRed: 0.14, green: 0.39, blue: 0.92, alpha: 1.0),
-    ])!
-    grad.draw(in: bg, angle: -90)
+    NSColor(srgbRed: 0.131, green: 0.129, blue: 0.125, alpha: 1.0).setFill()
+    bg.fill()
 
-    // Centered white "ru".
-    let letter = "ru" as NSString
-    let font = NSFont.systemFont(ofSize: s * 0.42, weight: .bold)
+    // Centered white "RU".
+    let letter = "RU" as NSString
+    let font = NSFont.systemFont(ofSize: s * 0.40, weight: .bold)
     let para = NSMutableParagraphStyle(); para.alignment = .center
     let attrs: [NSAttributedString.Key: Any] = [
         .font: font, .foregroundColor: NSColor.white, .paragraphStyle: para,
