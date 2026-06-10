@@ -73,6 +73,16 @@ system_keys = {
     113:0x10, 106:0x10, 64:0x10, 79:0x10, 80:0x10, 90:0x10,
 }
 
+# Numeric keypad. Keys absent from a .keylayout type NOTHING, so without
+# these the numpad on full-size/external keyboards is dead. Same in every
+# layer; decimal follows Windows kbdrum (',' — Russian decimal separator),
+# except the Latin ⌘ layer which gets '.' like US.
+numpad = {
+    65:(',','.'), 67:'*', 69:'+', 75:'/', 78:'-', 81:'=',
+    82:'0', 83:'1', 84:'2', 85:'3', 86:'4', 87:'5', 88:'6', 89:'7',
+    91:'8', 92:'9',
+}
+
 # Symbol / digit keys: code -> (base, shift, caps_follows_shift)
 symbols = {
     K1:('1','!',False), K2:('2','"',False), K3:('3','№',False), K4:('4',';',False),
@@ -163,6 +173,12 @@ def cell(code, variant):
     # non-printing system keys (same in every layer)
     if code in system_keys:
         return ('output_cp', system_keys[code])
+    # numpad (same in every layer; decimal differs in the Latin layer)
+    if code in numpad:
+        v = numpad[code]
+        if isinstance(v, tuple):
+            return ('output', v[1] if variant == 'latin' else v[0])
+        return ('output', v)
     # Command/Control layer: plain Latin so shortcuts work, no dead keys
     if variant == 'latin':
         return ('output', us_qwerty[code])
@@ -195,7 +211,7 @@ def cell(code, variant):
 # ---------------------------------------------------------------------------
 # Emit XML
 all_codes = sorted(set(plain_letters) | set(symbols) | set(action_keys)
-                   | set(system_keys) | {SPACE})
+                   | set(system_keys) | set(numpad) | {SPACE})
 
 def keymap_xml(variant):
     lines = []

@@ -21,7 +21,7 @@ func makeIcon(pixels: Int, to path: String) {
 
     // Rounded-square background matching the original macOS input-source
     // badge color. The badge fills the canvas like the system icons.
-    let inset = s * 0.045
+    let inset = s * 0.03
     let rect = CGRect(x: inset, y: inset, width: s - 2*inset, height: s - 2*inset)
     let radius = s * 0.16
     let bg = NSBezierPath(roundedRect: rect, xRadius: radius, yRadius: radius)
@@ -30,7 +30,7 @@ func makeIcon(pixels: Int, to path: String) {
 
     // Centered white "RU".
     let letter = "RU" as NSString
-    let font = NSFont.systemFont(ofSize: s * 0.40, weight: .bold)
+    let font = NSFont.systemFont(ofSize: s * 0.52, weight: .bold)
     let para = NSMutableParagraphStyle(); para.alignment = .center
     let attrs: [NSAttributedString.Key: Any] = [
         .font: font, .foregroundColor: NSColor.white, .paragraphStyle: para,
