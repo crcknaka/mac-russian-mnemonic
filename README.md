@@ -95,6 +95,13 @@ A few non-obvious things that make it behave like a real layout:
   or Chromium-based apps won't generate the key events.
 - **⌘ shortcuts** — a 4th key map (US-QWERTY) is selected when Command/Control
   is held, so `⌘C/⌘V/⌘A` resolve to Latin letters and match menu shortcuts.
+- **Caps Lock layout switch** — the `<keyboard group="…">` attribute is the
+  classic Mac *script code*. It must be `7` (smCyrillic), not `0` (smRoman),
+  or macOS treats the layout as Latin: the *"Use Caps Lock to switch to and
+  from ABC"* option then never appears when only an ABC/British layout and
+  this one are enabled (both look "Latin" to the system). The script code is
+  baked into the input-source cache, which only rebuilds at login — so after
+  (re)installing you must **log out and back in** before the option shows up.
 
 ## Credits
 

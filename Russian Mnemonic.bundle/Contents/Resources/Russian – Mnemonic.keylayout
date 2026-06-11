@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE keyboard SYSTEM "file://localhost/System/Library/DTDs/KeyboardLayout.dtd">
-<!-- Russian Mnemonic layout for macOS. Reproduces Windows kbdrum.dll 1:1. -->
-<keyboard group="0" id="-19419" name="Russian – Mnemonic" maxout="2">
+<!-- Russian Mnemonic layout for macOS. Reproduces Windows kbdrum.dll 1:1.
+     group="7" is the legacy Cyrillic script code (smCyrillic) — with group="0"
+     (Roman) TSM treats the layout as Latin and the "Use Caps Lock to switch
+     to and from ABC" option never appears in System Settings. -->
+<keyboard group="7" id="-19419" name="Russian – Mnemonic" maxout="2">
   <layouts>
     <layout first="0" last="17" mapSet="ANSI" modifiers="commonModifiers"/>
     <layout first="18" last="18" mapSet="ANSI" modifiers="commonModifiers"/>
