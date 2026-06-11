@@ -14,6 +14,13 @@
 		<string>com.local.keyboardlayout.RussianMnemonic</string>
 		<key>TISIntendedLanguage</key>
 		<string>ru</string>
+		<!-- Makes "Use Caps Lock to switch to and from ABC" available with just
+		     this layout + an ABC/Latin one. macOS only sets the per-source
+		     CapsLock-switch flag (read by LoadKeyboardLayoutXML from this
+		     KLInfo dict) when this key is true; without it the layout is not a
+		     valid non-Latin switch partner and the option never appears. -->
+		<key>TICapsLockLanguageSwitchCapable</key>
+		<true/>
 	</dict>
 </dict>
 </plist>
