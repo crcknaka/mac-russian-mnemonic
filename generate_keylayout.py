@@ -34,8 +34,8 @@ plain_letters = {
     R:'р', T:'т', I:'и', P:'п', L:'л', K:'к', N:'н', M:'м',
 }
 
-# US-QWERTY characters per physical key. Used for the Command/Control layer so
-# that shortcuts (⌘C ⌘V ⌘A ⌘Z ...) resolve to their Latin letters — exactly what
+# US-QWERTY characters per physical key. Used for the Command layer so that
+# shortcuts (⌘C ⌘V ⌘A ⌘Z ...) resolve to their Latin letters — exactly what
 # Apple's own non-Latin layouts and known-good layouts do.
 us_qwerty = {
     A:'a', S:'s', D:'d', F:'f', H:'h', G:'g', Z:'z', X:'x', C:'c', V:'v',
@@ -45,6 +45,16 @@ us_qwerty = {
     MINUS:'-', EQUAL:'=', LBR:'[', RBR:']', SEMI:';', QUOTE:"'", BACKTICK:'`',
     BSLASH:'\\', ISO_BSLASH:'\\', COMMA:',', DOT:'.', SLASH:'/', SPACE:' ',
 }
+
+# Control layer (⌃ held, no ⌘): terminals need real C0 control codes
+# (Ctrl+C = 0x03 = SIGINT, Ctrl+[ = ESC, ...) — a plain Latin letter under
+# anyControl is ignored by Terminal/iTerm/VS Code. Values mirror Apple's own
+# British/US layouts (dumped via UCKeyTranslate): letters -> 0x01..0x1A,
+# [ -> 0x1B, \ -> 0x1C, ] -> 0x1D, minus -> 0x1F, everything else unchanged.
+def ctrl_char(ch):
+    if 'a' <= ch <= 'z':
+        return chr(ord(ch) - ord('a') + 1)
+    return {'[':'\x1b', '\\':'\x1c', ']':'\x1d', '-':'\x1f'}.get(ch, ch)
 
 # Standard non-printing keys (Backspace, Tab, Return, arrows, ...).
 # These MUST be present or Chromium/Electron apps (most messengers) fail to
@@ -173,15 +183,18 @@ def cell(code, variant):
     # non-printing system keys (same in every layer)
     if code in system_keys:
         return ('output_cp', system_keys[code])
-    # numpad (same in every layer; decimal differs in the Latin layer)
+    # numpad (same in every layer; decimal differs in the Latin/Ctrl layers)
     if code in numpad:
         v = numpad[code]
         if isinstance(v, tuple):
-            return ('output', v[1] if variant == 'latin' else v[0])
+            return ('output', v[1] if variant in ('latin', 'ctrl') else v[0])
         return ('output', v)
-    # Command/Control layer: plain Latin so shortcuts work, no dead keys
+    # Command layer: plain Latin so shortcuts work, no dead keys
     if variant == 'latin':
         return ('output', us_qwerty[code])
+    # Control layer: C0 control codes so Ctrl+C etc. work in terminals
+    if variant == 'ctrl':
+        return ('output', ctrl_char(us_qwerty[code]))
     # space
     if code == SPACE:
         return ('action', 'spc')
@@ -264,9 +277,13 @@ xml = f'''<?xml version="1.0" encoding="UTF-8"?>
     <keyMapSelect mapIndex="0"><modifier keys=""/></keyMapSelect>
     <keyMapSelect mapIndex="1"><modifier keys="anyShift caps?"/></keyMapSelect>
     <keyMapSelect mapIndex="2"><modifier keys="caps"/></keyMapSelect>
+    <!-- ⌘ (with or without ⌃): Latin letters so GUI shortcuts resolve.
+         ⌃ alone: C0 control codes so terminals see Ctrl+C/Ctrl+Z/... -->
     <keyMapSelect mapIndex="3">
       <modifier keys="command anyShift? anyOption? anyControl? caps?"/>
-      <modifier keys="anyControl command? anyShift? anyOption? caps?"/>
+    </keyMapSelect>
+    <keyMapSelect mapIndex="4">
+      <modifier keys="anyControl anyShift? anyOption? caps?"/>
     </keyMapSelect>
   </modifierMap>
   <keyMapSet id="ANSI">
@@ -281,6 +298,9 @@ xml = f'''<?xml version="1.0" encoding="UTF-8"?>
     </keyMap>
     <keyMap index="3">
 {keymap_xml("latin")}
+    </keyMap>
+    <keyMap index="4">
+{keymap_xml("ctrl")}
     </keyMap>
   </keyMapSet>
 {actions_xml()}
